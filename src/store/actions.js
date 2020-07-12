@@ -21,7 +21,7 @@ const initialState = {
     { name: 'Bread', category: 'food', price: 2.39, inStock: 90, description: '', inventory_count: 0,
       image:'https://toppng.com/uploads/preview/bread-png-image-loaf-of-bread-11563103187ssm8yazedr.png' },
   ],
-  activeCategory: '',
+  activeCategory: 'none',
 };
 
 
@@ -30,35 +30,11 @@ export default (state = initialState, action) => {
   const { type, payload } = action;
   switch (type) {
 
-  case 'CATEGORIES':
-    const categories = state.categories.map((category) => {
-      if (category.name === payload) {
-        return { 
-          name: category.name, 
-          displayName: category.displayName,
-          description: category.description };
-      } else {
-        return category;
-      }
-    });
-    return categories ;
-
-  case 'PRODUCTS':
-    const products = state.products.map((product) => {
-      if (product.name === payload) {
-        return { 
-          name: product.name, 
-          category: product.category, 
-          price: product.price , 
-          inStock: product.inStock, 
-          description: product.description , 
-          inventory_count: product.inventory_count, 
-          image: product.image};
-      } else {
-        return product;
-      }
-    });
-    return products ;
+  case 'SHOW':
+    const activeCategory = payload;
+    const categories = state.categories;
+    const products = state.products;
+    return { categories,products, activeCategory } ;
 
   default:
     return state;
@@ -67,18 +43,17 @@ export default (state = initialState, action) => {
  
 
 // ACTIONS
-
-export const categories = (name) => {
+export const showAction = (category) => {
   return {
-    type: 'CATEGORIES',
-    payload: name,
+    type: 'SHOW',
+    payload: category,
   };
 };
   
-export const products = (name) => {
-  return {
-    type: 'PRODUCTS',
-    payload: name,
-  };
-};
+// export const products = (name) => {
+//   return {
+//     type: 'PRODUCTS',
+//     payload: name,
+//   };
+// };
   
