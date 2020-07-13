@@ -50,10 +50,3 @@ export const showAction = (category) => {
   };
 };
   
-// export const products = (name) => {
-//   return {
-//     type: 'PRODUCTS',
-//     payload: name,
-//   };
-// };
-  

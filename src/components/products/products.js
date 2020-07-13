@@ -1,34 +1,91 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
+import { makeStyles } from '@material-ui/core/styles';
+import Card from '@material-ui/core/Card';
+import CardActionArea from '@material-ui/core/CardActionArea';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import CardMedia from '@material-ui/core/CardMedia';
+import Typography from '@material-ui/core/Typography';
+import {CssBaseline,Container} from '@material-ui/core';
+
+const useStyles = makeStyles({
+  root: {
+    maxWidth: 345,
+    margin:30,
+    
+  },
+  media: {
+    height: 140,
+
+  },
+});
+
+
 
 const Products = (props) => {
 
-  console.log('props.actions.products:', props.actions.products);
-  console.log('props.actions.activeCategory:', props.actions.activeCategory);
-    
+  const classes = useStyles();
+
   return (
     <>
-      <h3>Products:</h3>
+      <CssBaseline />
 
-      <div >
-        {props.actions.products.filter(allProducts => allProducts.category === props.actions.activeCategory )
-          .map((product,i) => {
+      <Container maxWidth="sm">
+        <Typography component="div" style={{ backgroundColor: '#cae3d3' ,padding: '3vh' , marginTop:'1vh'}} >
+          <Typography variant="h4" gutterBottom>
+ Products:
+          </Typography>
     
-            return (
-              <div key={i}>
-                <h3>Product Name : {product.name}</h3>
-                <img src={`${product.image}`} alt='img' />
-                <p>Product Category : {product.category}</p>
-                <p>In Stock : {product.inStock}</p>
-                <p>Price : {product.price}</p>
-                <p>description : {product.description}</p>
-                <p>inventory count : {product.inventory_count}</p>
-              </div>
-            );
+      
 
-          })}
-      </div>
+      
+          {props.actions.products.filter(allProducts => allProducts.category === props.actions.activeCategory )
+            .map((product,i) => {
+    
+              return (
+                <div display="flex" justifyContent="center"alignContent="center"> 
+                  <Card key={i} className={classes.root}  >
+                    <CardActionArea>
+                      <CardMedia
+                        className={classes.media}
+                        image= {product.image}
+                        title={product.name}
+                      />
+                      <CardContent>
+
+                        <Typography gutterBottom variant="h5" component="h2">
+                          {product.name}
+                        </Typography>
+                        <Typography gutterBottom variant="h5" component="h2">
+                          {product.price} $
+                        </Typography>
+                        <Typography variant="body2" color="textSecondary" component="p">
+                      Description: {product.description}
+                        </Typography>
+                        <Typography variant="body2" color="textSecondary" component="p">
+                      Category: {product.category}
+                        </Typography>
+                        <Typography variant="body2" color="textSecondary" component="p">
+                      In Stock: {product.inStock}
+                        </Typography>
+                        <Typography variant="body2" color="textSecondary" component="p">
+                      Inventory Count: {product.inventory_count}
+                        </Typography>
+          
+                      </CardContent>
+                    </CardActionArea>
+                    <CardActions>
+                    </CardActions>
+                  </Card>
+                </div>
+              
+              );
+
+            })}
+        </Typography>
+      </Container>
     </>
   );
 };
@@ -38,11 +95,12 @@ const Products = (props) => {
 //          return(......)
 //          :
 //          null;
-    
-    
+ 
+
 const mapStateToProps = (state) => {
   return { actions: state.actions };
 };
     
 
 export default connect(mapStateToProps)(Products);
+
