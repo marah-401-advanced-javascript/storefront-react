@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { showAction } from '../../store/actions';
+import { showProducts } from '../../store/categories';
+
 import {Breadcrumbs, Link,Container,Typography} from '@material-ui/core';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
@@ -17,9 +18,9 @@ const Categories = (props) => {
           </Typography>
 
           <Breadcrumbs aria-label="breadcrumb" >
-            {props.actions.categories.map((category,i) => {
+            {props.categories.categories.map((category,i) => {
               return (
-                <Link key={i} color="inherit" onClick={() => props.showAction(category.name)}>
+                <Link key={i} color="inherit" onClick={() => props.showProducts(category.name)}>
                   {category.displayName}
                 </Link>
               );
@@ -27,7 +28,7 @@ const Categories = (props) => {
           </Breadcrumbs>
 
           <Typography variant="overline" display="block" gutterBottom>
-        Active category : { props.actions.activeCategory}
+        Active category : { props.categories.activeCategory}
           </Typography>
         
         </Typography>
@@ -40,15 +41,15 @@ const Categories = (props) => {
 
 
 //mapping state to props will subscribe the the change to the state and rerender :  
-// props.actions.categories
-// props.actions.activeCategory
+// props.categories.categories
+// props.categories.activeCategory
 const mapStateToProps = (state) => {
-  return { actions: state.actions };
+  return { categories: state.categories, products: state.products };
 };
   
 
 // Dispatches an action when one is clicked to “activate” it
-const mapDispatchToProps = { showAction };  // props.showAction
+const mapDispatchToProps = { showProducts };  // props.showProducts
 
 
 export default connect(mapStateToProps, mapDispatchToProps)(Categories);
