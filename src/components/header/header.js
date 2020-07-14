@@ -8,7 +8,7 @@ function Header(props) {
 
   return (
     <>
-      <AppBar position="static" 
+      <AppBar position="sticky" 
         style={{ textAlign:'center',backgroundColor:'#375863', fontSize: '3em',justifyContent: 'center',
           fontFamily: 'Lucida Console", Courier, monospace', letterSpacing: '0.1vw' , marginBottom: '2vh'}}>
 
