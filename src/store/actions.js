@@ -1,52 +1,81 @@
-// STATE
-const initialState = {
-  categories: [
-    { name: 'electronics', displayName: 'Elecronics' , description:'phones, computers, cars' },
-    { name: 'food', displayName: 'Food' , description:'fruits, veggies, meat' },
-    { name: 'clothing', displayName: 'Clothing', description:'tops, pants, dresses' },
-  ],
-  products: [
-    { name: 'TV', category: 'electronics', price: 699.00, inStock: 5, description: '', inventory_count: 0,
-      image:'https://lh3.googleusercontent.com/proxy/sVQhAsf0CQTG2DqgMg_ao_1a30cQJ_JcYWkPCcbXFm7eo5cwWn7OIN9w3LKbeqZ4GJ3Ibdhg-Vbkr4K-UQS7nbMC92DJ0G4a7rlkU_RV91WfWL29sJdU' },
-    { name: 'Radio', category: 'electronics', price: 99.00, inStock: 15, description: '', inventory_count: 0,
-      image:'https://pluspng.com/img-png/radio-hd-png-radio-picture-png-image-500.png' },
-    { name: 'Shirt', category: 'clothing', price: 9.00, inStock: 25, description: '', inventory_count: 0,
-      image: 'https://pngimg.com/uploads/dress_shirt/dress_shirt_PNG8117.png' },
-    { name: 'Socks', category: 'clothing', price: 12.00, inStock: 10, description: '', inventory_count: 0,
-      image:'https://www.pngfind.com/pngs/m/14-143267_socks-png-background-image-sock-transparent-png.png' },
-    { name: 'Apples', category: 'food', price: .99, inStock: 500, description: '', inventory_count: 0,
-      image:'https://e1.pngegg.com/pngimages/23/306/png-clipart-new-s-two-red-apples-thumbnail.png' },
-    { name: 'Eggs', category: 'food', price: 1.99, inStock: 12, description: '', inventory_count: 0,
-      image:'https://w7.pngwing.com/pngs/439/922/png-transparent-chicken-egg-yolk-egg-eggshell-broken-egg-easter-eggs.png' },
-    { name: 'Bread', category: 'food', price: 2.39, inStock: 90, description: '', inventory_count: 0,
-      image:'https://toppng.com/uploads/preview/bread-png-image-loaf-of-bread-11563103187ssm8yazedr.png' },
-  ],
-  activeCategory: 'none',
-};
+//////// ACTIONS /////////
+import superagent from 'superagent';
 
+// let api = 'https://api-marah.herokuapp.com';
+const api = 'https://rowaid-server.herokuapp.com/api/v1';
 
-// REDUCER
-export default (state = initialState, action) => {
-  const { type, payload } = action;
-  switch (type) {
+export const handelCategory = (name) => ({
+  type: 'UPDATE ACTIVE CATEGORY',
+  payload: name,
+});
 
-  case 'SHOW':
-    const activeCategory = payload;
-    const categories = state.categories;
-    const products = state.products;
-    return { categories,products, activeCategory } ;
+export const handelProduct = (name) => ({
+  type: 'UPDATE PRODUCTS',
+  payload: name,
+});
 
-  default:
-    return state;
-  }
-};
- 
+export const removeCart = (name) => ({
+  type: 'REMOVE PRODUCT',
+  payload: name,
+});
 
-// ACTIONS
-export const showAction = (category) => {
-  return {
-    type: 'SHOW',
-    payload: category,
+export const getRemoteData = function () {
+  return (dispatch) => {
+    return superagent
+      .get(api + '/categories')
+      .set('Content-Type', 'application/json')
+      .then((response) => {
+        dispatch(getCategory({ results: response.body }));
+      });
   };
 };
-  
+export const getRemoteProduct = function () {
+  return (dispatch) => {
+    return superagent
+      .get(api + '/products')
+      .set('Content-Type', 'application/json')
+      .then((response) => {
+        dispatch(getProducts({ results: response.body }));
+      });
+  };
+};
+export const putRemoteProduct = function (name, _id, stock) {
+  return (dispatch) => {
+    return superagent
+      .put(api + '/products/' + _id)
+      .send({ inStock: stock - 1 })
+      .set('Content-Type', 'application/json')
+      .then((response) => {
+        console.log(_id, stock, name);
+        dispatch(addToCart(name, _id, stock));
+      })
+      .catch(console.log);
+  };
+};
+export const deleteRemoteProduct = function (name, _id, stock) {
+  return (dispatch) => {
+    console.log(_id, stock, name);
+    return superagent
+      .put(api + '/products/' + _id)
+      .send({ inStock: stock + 1 })
+      .set('Content-Type', 'application/json')
+      .then((response) => {
+        dispatch(removeCart(name, _id, stock));
+      })
+      .catch(console.log);
+  };
+};
+
+export const getCategory = (response) => ({
+  type: 'ADD GETOGRY',
+  payload: response,
+});
+export const getProducts = (response) => ({
+  type: 'ADD PRODUCTS',
+  payload: response,
+});
+
+export const addToCart = (name, _id, stock) => ({
+  type: 'ADD PRODUCT',
+  payload: { name, _id, stock },
+});

@@ -1,11 +1,18 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { showProducts } from '../../store/categories';
+import { handelCategory, handelProduct, getRemoteProduct, getRemoteData } from '../../store/actions';
+import { useEffect } from 'react';
 
 import {Breadcrumbs, Link,Container,Typography} from '@material-ui/core';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
 const Categories = (props) => {
+
+  useEffect(() => {
+    props.getRemoteData();
+    props.getRemoteProduct();
+  });
+
   return (
     <>
       <CssBaseline />
@@ -20,7 +27,10 @@ const Categories = (props) => {
           <Breadcrumbs aria-label="breadcrumb" >
             {props.categories.categories.map((category,i) => {
               return (
-                <Link key={i} color="inherit" onClick={() => props.showProducts(category.name)}>
+                <Link key={i} color="inherit" onClick={() =>{
+                  props.handelCategory(category.name);
+                  props.handelProduct(category.name);
+                }}>
                   {category.displayName}
                 </Link>
               );
@@ -38,19 +48,16 @@ const Categories = (props) => {
 };
  
 
-
-
-//mapping state to props will subscribe the the change to the state and rerender :  
-// props.categories.categories
-// props.categories.activeCategory
 const mapStateToProps = (state) => {
   return { categories: state.categories, products: state.products };
 };
   
-
-// Dispatches an action when one is clicked to “activate” it
-const mapDispatchToProps = { showProducts };  // props.showProducts
-
+const mapDispatchToProps = (dispatch) => ({
+  handelCategory: () => dispatch(handelCategory()),
+  handelProduct: (category) => dispatch(handelProduct(category)),
+  getRemoteProduct: () => dispatch(getRemoteProduct()),
+  getRemoteData: () => dispatch(getRemoteData()),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(Categories);
   

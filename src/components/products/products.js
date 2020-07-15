@@ -1,6 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { addToCart } from '../../store/products';
+import { putRemoteProduct } from '../../store/actions.js';
+import { useEffect } from 'react';
 import Cart from './cart';
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -37,7 +39,7 @@ const Products = (props) => {
         <Typography component="div" style={{ backgroundColor: '#cae3d3' ,padding: '3vh' , marginTop:'1vh'}} >
           <Typography variant="h4" gutterBottom>Products:</Typography>
     
-          {props.products
+          {props.productsList
             .map((product,i) => {
 
               return (
@@ -68,7 +70,7 @@ const Products = (props) => {
                       </Typography>
 
                       <Button variant="contained" color="primary" style={{ width: 100 + '%' }}
-                        onClick={() => props.addToCart(product)}>ADD TO CART</Button>
+                        onClick={() =>  props.addToCart(product.name, product._id, product.inStock) }>ADD TO CART</Button>
           
                     </CardContent>
                   </CardActionArea>
@@ -103,11 +105,14 @@ const Products = (props) => {
  
 
 const mapStateToProps = (state) => {
-  return { products: state.products, categories: state.categories, cart: state.cart };
+  return { productsList: state.products.productsList, categories: state.categories, cart: state.cart };
 };
  
-const mapDispatchToProps = { addToCart };  // props.showProducts
-
+const mapDispatchToProps = (dispatch)=>({
+  addToCart: (id, stock, name) => dispatch(putRemoteProduct(id, stock, name)),  
+  // get: ()=> dispatch(getProductsData()),
+  // delete: (product)=> dispatch(deleteProduct(product)),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(Products);
 

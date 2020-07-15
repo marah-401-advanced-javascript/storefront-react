@@ -9,7 +9,7 @@
 - [submission PR lab36](https://github.com/marah-401-advanced-javascript/storefront-react/pull/1)
 - [submission PR lab37](https://github.com/marah-401-advanced-javascript/storefront-react/pull/2)
 
-- [deployed Application netlify](https://store-react-marah.netlify.app/)
+- [deployed Application netlify](https://store-react-marah-thunk.netlify.app/)
 
 
 #### Running the app
