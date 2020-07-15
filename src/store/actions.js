@@ -1,80 +1,81 @@
 //////// ACTIONS /////////
 import superagent from 'superagent';
 
-let api = 'https://api-marah.herokuapp.com';
+// let api = 'https://api-marah.herokuapp.com';
+const api = 'https://rowaid-server.herokuapp.com/api/v1';
 
-//GET CATEGORIES
-export const getCategories = () => dispatch => {
-  return superagent.get(`${api}/categories`)
-    .then(response => {
-      dispatch(getAction(response.body));
-    });
+export const handelCategory = (name) => ({
+  type: 'UPDATE ACTIVE CATEGORY',
+  payload: name,
+});
+
+export const handelProduct = (name) => ({
+  type: 'UPDATE PRODUCTS',
+  payload: name,
+});
+
+export const removeCart = (name) => ({
+  type: 'REMOVE PRODUCT',
+  payload: name,
+});
+
+export const getRemoteData = function () {
+  return (dispatch) => {
+    return superagent
+      .get(api + '/categories')
+      .set('Content-Type', 'application/json')
+      .then((response) => {
+        dispatch(getCategory({ results: response.body }));
+      });
+  };
 };
-
-
-//GET PRODUCTS
-export const getRemoteData = () => dispatch => {
-  return superagent.get(`${api}/products`)
-    .then(response => {
-      dispatch(getAction(response.body));
-    });
+export const getRemoteProduct = function () {
+  return (dispatch) => {
+    return superagent
+      .get(api + '/products')
+      .set('Content-Type', 'application/json')
+      .then((response) => {
+        dispatch(getProducts({ results: response.body }));
+      });
+  };
 };
-
-
-// PUT PRODUCTS
-export const putRemoteData = ( data,id) => async dispatch => {
-  return superagent.put(`${api}/products/${id}`)
-    .send(data)
-    .then(response => {
-      dispatch(putAction(response));
-    });
+export const putRemoteProduct = function (name, _id, stock) {
+  return (dispatch) => {
+    return superagent
+      .put(api + '/products/' + _id)
+      .send({ inStock: stock - 1 })
+      .set('Content-Type', 'application/json')
+      .then((response) => {
+        console.log(_id, stock, name);
+        dispatch(addToCart(name, _id, stock));
+      })
+      .catch(console.log);
+  };
 };
-
-// DELETE PRODUCTS
-export const deleteRemoteData = (id) => async dispatch => {
-  let response = await (await superagent.delete(`${api}/products/${id}`));
-  dispatch(deleteAction(response.body));
-};
-
-// POST PRODUCTS
-export const postRemoteData = (data) => async dispatch => {
-  data.quantity = 1;
-  return superagent.post(`${api}/products`)
-    .send(data)
-    // .set('X-API-Key', 'foobar')
-    // .set('Accept', 'application/json')
-    .then(response => {
-      dispatch(postAction(response.body));
-    });
-
-};
-
-
-
-export const getAction = payload => {
-  return {
-    type: 'GET',
-    payload: payload,
+export const deleteRemoteProduct = function (name, _id, stock) {
+  return (dispatch) => {
+    console.log(_id, stock, name);
+    return superagent
+      .put(api + '/products/' + _id)
+      .send({ inStock: stock + 1 })
+      .set('Content-Type', 'application/json')
+      .then((response) => {
+        dispatch(removeCart(name, _id, stock));
+      })
+      .catch(console.log);
   };
 };
 
-export const putAction = payload => {
-  return {
-    type: 'PUT',
-    payload: payload,
-  };
-};
+export const getCategory = (response) => ({
+  type: 'ADD GETOGRY',
+  payload: response,
+});
+export const getProducts = (response) => ({
+  type: 'ADD PRODUCTS',
+  payload: response,
+});
 
-export const postAction = payload => {
-  return {
-    type: 'POST',
-    payload: payload,
-  };
-};
-
-export const deleteAction = payload => {
-  return {
-    type: 'DELETE',
-    payload: payload,
-  };
-};
+export const addToCart = (name, _id, stock) => ({
+  type: 'ADD PRODUCT',
+  payload: { name, _id, stock },
+});

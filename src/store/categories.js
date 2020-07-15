@@ -1,45 +1,19 @@
-// STATE
-const initialState = {
-  categories: [
-    // { name: 'electronics', displayName: 'Elecronics' , description:'phones, computers, cars' },
-    // { name: 'food', displayName: 'Food' , description:'fruits, veggies, meat' },
-    // { name: 'clothing', displayName: 'Clothing', description:'tops, pants, dresses' },
-  ],
-  activeCategory: 'none',
+let initialState = {
+  categories: [],
+  activeCategory: '',
 };
-
-
-// REDUCER
 export default (state = initialState, action) => {
   const { type, payload } = action;
-
+  
   switch (type) {
-  case 'SHOW':
-    return { categories:state.categories , activeCategory:payload } ;
-   
-  case 'GETCATEGORY':
-    // state.categories = [...payload.results];
-    //   return {
-    //     categories: state.categories,
-    //     products: state.products,
-    //     activeCategory: state.activeCategory,
-    //     cartItem: state.cartItem,
-    //     results: state.results
-    //   };
-    return { results: payload };
-
+  
+  case 'UPDATE ACTIVE CATEGORY':
+    return { ...state, activeCategory: payload };
+  
+  case 'ADD GETOGRY':
+    return { ...state, categories: payload.results.results };
+  
   default:
     return state;
   }
 };
-   
-  
-// ACTIONS
-export const showProducts = (category) => {
-  return {
-    type: 'SHOW',
-    payload: category,
-  };
-};
-    
-  
