@@ -11,12 +11,13 @@ function App() {
   return (
     <>
       <CssBaseline >
+
         <Header />
         <Categories />
         <Products />
         <Footer />
-      </CssBaseline>
 
+      </CssBaseline>
     </>
   );
 }

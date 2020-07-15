@@ -1,9 +1,9 @@
 // STATE
 const initialState = {
   categories: [
-    { name: 'electronics', displayName: 'Elecronics' , description:'phones, computers, cars' },
-    { name: 'food', displayName: 'Food' , description:'fruits, veggies, meat' },
-    { name: 'clothing', displayName: 'Clothing', description:'tops, pants, dresses' },
+    // { name: 'electronics', displayName: 'Elecronics' , description:'phones, computers, cars' },
+    // { name: 'food', displayName: 'Food' , description:'fruits, veggies, meat' },
+    // { name: 'clothing', displayName: 'Clothing', description:'tops, pants, dresses' },
   ],
   activeCategory: 'none',
 };
@@ -16,7 +16,18 @@ export default (state = initialState, action) => {
   switch (type) {
   case 'SHOW':
     return { categories:state.categories , activeCategory:payload } ;
-  
+   
+  case 'GETCATEGORY':
+    // state.categories = [...payload.results];
+    //   return {
+    //     categories: state.categories,
+    //     products: state.products,
+    //     activeCategory: state.activeCategory,
+    //     cartItem: state.cartItem,
+    //     results: state.results
+    //   };
+    return { results: payload };
+
   default:
     return state;
   }

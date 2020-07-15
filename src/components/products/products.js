@@ -1,6 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { addToCart } from '../../store/products';
+import { getProductsData ,deleteProduct} from '../../store/actions.js';
+import { useEffect } from 'react';
 import Cart from './cart';
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -28,6 +30,23 @@ const useStyles = makeStyles({
 
 const Products = (props) => {
 
+
+  const fetchData = () =>{
+    props.get();
+  };
+
+  const clickHandler=(product)=>{
+    props.addToCart(product);
+    if(product.inStock===1){
+      props.delete(product);
+    }
+  };
+  
+  useEffect(()=>{
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const classes = useStyles();
 
   return (
@@ -37,7 +56,7 @@ const Products = (props) => {
         <Typography component="div" style={{ backgroundColor: '#cae3d3' ,padding: '3vh' , marginTop:'1vh'}} >
           <Typography variant="h4" gutterBottom>Products:</Typography>
     
-          {props.products
+          {props.products.results
             .map((product,i) => {
 
               return (
@@ -68,7 +87,7 @@ const Products = (props) => {
                       </Typography>
 
                       <Button variant="contained" color="primary" style={{ width: 100 + '%' }}
-                        onClick={() => props.addToCart(product)}>ADD TO CART</Button>
+                        onClick={() => clickHandler(product) }>ADD TO CART</Button>
           
                     </CardContent>
                   </CardActionArea>
@@ -106,8 +125,11 @@ const mapStateToProps = (state) => {
   return { products: state.products, categories: state.categories, cart: state.cart };
 };
  
-const mapDispatchToProps = { addToCart };  // props.showProducts
-
+const mapDispatchToProps = (dispatch)=>({
+  addToCart: (product)=> dispatch(addToCart(product)),
+  get: ()=> dispatch(getProductsData()),
+  delete: (product)=> dispatch(deleteProduct(product)),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(Products);
 

@@ -32,7 +32,20 @@ export default (state = initialState, action) => {
     return state.map(product => {
       return product.name === payload.name ? {...product, inStock: product.inStock - 1} : product;
     });
-        
+    
+  case 'GET':
+    return { results: payload };
+    
+  case 'PUT':
+    return state;
+    
+  case 'POST':
+    let addToCart = [...state.results,payload];
+    return { results: addToCart };
+    
+  case 'DELETE':
+    return state;   
+  
   default:
     return state;
   }
